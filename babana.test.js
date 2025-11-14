@@ -73,7 +73,7 @@ const testResults = [];
  * @example
  * formatInputData([1, 2, 3]); // Returns: "[1,2,3]"
  * formatInputData([]); // Returns: "[]"
- * formatInputData([/* 1000 items */]); // Returns: "[1000 items: 0,1,2...]"
+ * formatInputData([1, 2, 3, ...]); // Returns: "[1000 items: 1,2,3...]"
  */
 function formatInputData(input, maxLength = 30) {
     let formatted;
