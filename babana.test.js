@@ -13,13 +13,31 @@ function frequencyTable(banana) {
     return freq;
 }
 
+// Test results storage
+const testResults = [];
+
 // Simple test framework
 function test(name, fn) {
+    const startTime = Date.now();
     try {
         fn();
+        const duration = Date.now() - startTime;
+        testResults.push({
+            testCase: name,
+            status: 'PASS',
+            duration: duration,
+            error: null
+        });
         console.log(`✓ ${name}`);
         return true;
     } catch (error) {
+        const duration = Date.now() - startTime;
+        testResults.push({
+            testCase: name,
+            status: 'FAIL',
+            duration: duration,
+            error: error.message
+        });
         console.error(`✗ ${name}`);
         console.error(`  Error: ${error.message}`);
         return false;
@@ -151,6 +169,64 @@ test('TC-012: Large array', () => {
     passed++;
 });
 
+// Function to display test results in a table
+function displayTestResultsTable(results) {
+    console.log('\n' + '='.repeat(90));
+    console.log('TEST RESULTS TABLE');
+    console.log('='.repeat(90));
+    
+    // Table header
+    console.log(
+        '| ' +
+        'Test Case'.padEnd(40) + ' | ' +
+        'Status'.padEnd(8) + ' | ' +
+        'Duration (ms)'.padEnd(13) + ' | ' +
+        'Error Message'.padEnd(25) + ' |'
+    );
+    console.log('|' + '-'.repeat(42) + '|' + '-'.repeat(10) + '|' + '-'.repeat(15) + '|' + '-'.repeat(27) + '|');
+    
+    // Table rows
+    results.forEach(result => {
+        const status = result.status === 'PASS' ? '✓ PASS' : '✗ FAIL';
+        const duration = result.duration.toString().padStart(11);
+        const error = result.error ? result.error.substring(0, 23) : '-';
+        
+        console.log(
+            '| ' +
+            result.testCase.padEnd(40) + ' | ' +
+            status.padEnd(8) + ' | ' +
+            duration.padEnd(13) + ' | ' +
+            error.padEnd(25) + ' |'
+        );
+    });
+    
+    // Summary footer
+    const passed = results.filter(r => r.status === 'PASS').length;
+    const failed = results.filter(r => r.status === 'FAIL').length;
+    const total = results.length;
+    const successRate = total > 0 ? ((passed / total) * 100).toFixed(1) : 0;
+    const totalDuration = results.reduce((sum, r) => sum + r.duration, 0);
+    const avgDuration = total > 0 ? (totalDuration / total).toFixed(2) : 0;
+    
+    console.log('|' + '-'.repeat(42) + '|' + '-'.repeat(10) + '|' + '-'.repeat(15) + '|' + '-'.repeat(27) + '|');
+    console.log(
+        '| ' +
+        'SUMMARY'.padEnd(40) + ' | ' +
+        `${passed}/${total}`.padEnd(8) + ' | ' +
+        `${avgDuration} avg`.padEnd(13) + ' | ' +
+        `${successRate}% success`.padEnd(25) + ' |'
+    );
+    console.log('='.repeat(90));
+    
+    // Final status message
+    if (passed === total) {
+        console.log('🎉 All tests passed!');
+    } else {
+        console.log(`⚠️  ${failed} test(s) failed`);
+    }
+    console.log(`⏱️  Total execution time: ${totalDuration}ms\n`);
+}
+
 // Summary
 console.log(`\n${'='.repeat(50)}`);
 console.log(`Tests passed: ${passed}/${total}`);
@@ -160,4 +236,7 @@ if (passed === total) {
 } else {
     console.log(`⚠️  ${total - passed} test(s) failed`);
 }
+
+// Display results table
+displayTestResultsTable(testResults);
 
