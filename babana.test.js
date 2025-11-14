@@ -81,7 +81,8 @@ test('TC-004: String array', () => {
 test('TC-005: Mixed types array', () => {
     total++;
     const result = frequencyTable([1, '1', 1, '1', 'a']);
-    assertDeepEqual(result, {1: 2, '1': 2, 'a': 1});
+    // Note: JavaScript converts object keys to strings, so 1 and '1' both become '1'
+    assertDeepEqual(result, {'1': 4, 'a': 1});
     passed++;
 });
 

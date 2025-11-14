@@ -36,7 +36,8 @@ This document outlines the test plan for the `frequencyTable(banana)` function, 
 
 #### TC-005: Mixed types array
 - **Input**: `[1, '1', 1, '1', 'a']`
-- **Expected Output**: `{1: 2, '1': 2, 'a': 1}`
+- **Expected Output**: `{'1': 4, 'a': 1}`
+- **Note**: JavaScript converts object keys to strings, so numeric `1` and string `'1'` both become the string key `'1'`
 - **Priority**: Medium
 
 #### TC-006: Array with null/undefined
