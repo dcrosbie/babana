@@ -1,13 +1,71 @@
+/**
+ * Counts the frequency of each item in an array and returns an object
+ * where keys are the unique items and values are their occurrence counts.
+ * 
+ * @param {Array} banana - The input array to analyze. Can contain any data types
+ *                        (numbers, strings, booleans, null, undefined, objects, etc.)
+ * 
+ * @returns {Object} An object mapping each unique item to its frequency count.
+ *                  Keys are the items from the input array, values are numbers
+ *                  representing how many times each item appeared.
+ * 
+ * @throws {TypeError} Throws a TypeError if the input is not an array.
+ * 
+ * @example
+ * // Count frequencies in an array of numbers
+ * frequencyTable([1, 2, 2, 3, 3, 3]);
+ * // Returns: {1: 1, 2: 2, 3: 3}
+ * 
+ * @example
+ * // Count frequencies in an array of strings
+ * frequencyTable(['a', 'b', 'a', 'c', 'b', 'a']);
+ * // Returns: {a: 3, b: 2, c: 1}
+ * 
+ * @example
+ * // Count frequencies in a mixed-type array
+ * frequencyTable([1, '1', 1, '1', 'a']);
+ * // Returns: {'1': 4, 'a': 1}
+ * // Note: JavaScript converts object keys to strings, so numeric 1 and string '1' both become '1'
+ * 
+ * @example
+ * // Handle empty array
+ * frequencyTable([]);
+ * // Returns: {}
+ * 
+ * @example
+ * // Handle null and undefined values
+ * frequencyTable([null, undefined, null, 'test']);
+ * // Returns: {null: 2, undefined: 1, 'test': 1}
+ * 
+ * @example
+ * // Count frequencies in an array with boolean values
+ * frequencyTable([true, false, true, true, false]);
+ * // Returns: {true: 3, false: 2}
+ * 
+ * @example
+ * // Count frequencies in an array with Unicode characters
+ * frequencyTable(['🚀', '🍌', '🚀', '🍌', '🍌']);
+ * // Returns: {'🚀': 2, '🍌': 3}
+ */
 function frequencyTable(banana) {
-    // Input validation
+    // Input validation: Ensure the input is an array
+    // This prevents runtime errors and provides clear error messages
     if (!Array.isArray(banana)) {
         throw new TypeError('Input must be an array');
     }
     
-    // Optimized counting with nullish coalescing operator
+    // Initialize an empty object to store frequency counts
     const freq = {};
+    
+    // Iterate through each item in the input array
+    // The nullish coalescing operator (??) handles undefined/null values
+    // If freq[item] is undefined or null, it defaults to 0, then adds 1
+    // If freq[item] exists, it uses the current value and adds 1
+    // This is more concise than: if (freq[item] === undefined) { freq[item] = 1; } else { freq[item]++; }
     for (const item of banana) {
         freq[item] = (freq[item] ?? 0) + 1;
     }
+    
+    // Return the frequency object
     return freq;
 }

@@ -1,24 +1,80 @@
-// Test suite for frequencyTable function
-// Run with: node babana.test.js
+/**
+ * Test Suite for frequencyTable Function
+ * 
+ * This file contains comprehensive tests for the frequencyTable function,
+ * including unit tests, edge cases, and validation tests.
+ * 
+ * Run with: node babana.test.js
+ * 
+ * @fileoverview Test suite with 15 test cases covering:
+ * - Basic functionality (unique items, duplicates)
+ * - Different data types (numbers, strings, booleans, null, undefined)
+ * - Edge cases (empty arrays, single items, large arrays)
+ * - Special characters and Unicode
+ * - Input validation (error handling)
+ */
 
+// Import the function from the main file (or define it here for testing)
+/**
+ * Counts the frequency of each item in an array and returns an object
+ * where keys are the unique items and values are their occurrence counts.
+ * 
+ * @param {Array} banana - The input array to analyze. Can contain any data types
+ *                        (numbers, strings, booleans, null, undefined, objects, etc.)
+ * 
+ * @returns {Object} An object mapping each unique item to its frequency count.
+ *                  Keys are the items from the input array, values are numbers
+ *                  representing how many times each item appeared.
+ * 
+ * @throws {TypeError} Throws a TypeError if the input is not an array.
+ */
 function frequencyTable(banana) {
-    // Input validation
+    // Input validation: Ensure the input is an array
+    // This prevents runtime errors and provides clear error messages
     if (!Array.isArray(banana)) {
         throw new TypeError('Input must be an array');
     }
     
-    // Optimized counting with nullish coalescing operator
+    // Initialize an empty object to store frequency counts
     const freq = {};
+    
+    // Iterate through each item in the input array
+    // The nullish coalescing operator (??) handles undefined/null values
+    // If freq[item] is undefined or null, it defaults to 0, then adds 1
+    // If freq[item] exists, it uses the current value and adds 1
+    // This is more concise than: if (freq[item] === undefined) { freq[item] = 1; } else { freq[item]++; }
     for (const item of banana) {
         freq[item] = (freq[item] ?? 0) + 1;
     }
+    
+    // Return the frequency object
     return freq;
 }
 
-// Test results storage
+// ============================================================================
+// Test Framework Components
+// ============================================================================
+
+/**
+ * Array to store test results for table display
+ * Each entry contains: testCase, inputData, status, duration, error
+ * @type {Array<Object>}
+ */
 const testResults = [];
 
-// Helper function to format input data for display
+/**
+ * Formats input data for display in the test results table.
+ * Handles arrays, large arrays, and special values like undefined.
+ * 
+ * @param {*} input - The input data to format (usually an array)
+ * @param {number} [maxLength=30] - Maximum length of formatted string
+ * @returns {string} Formatted string representation of the input
+ * 
+ * @example
+ * formatInputData([1, 2, 3]); // Returns: "[1,2,3]"
+ * formatInputData([]); // Returns: "[]"
+ * formatInputData([/* 1000 items */]); // Returns: "[1000 items: 0,1,2...]"
+ */
 function formatInputData(input, maxLength = 30) {
     let formatted;
     if (Array.isArray(input)) {
@@ -50,7 +106,20 @@ function formatInputData(input, maxLength = 30) {
     return formatted;
 }
 
-// Simple test framework
+/**
+ * Simple test framework function that runs a test and records the result.
+ * 
+ * @param {string} name - Name/identifier of the test case
+ * @param {*} inputData - The input data used for this test (stored for display)
+ * @param {Function} fn - Test function to execute. Should throw an error if test fails.
+ * @returns {boolean} true if test passed, false if test failed
+ * 
+ * @example
+ * test('My test', [1, 2, 3], () => {
+ *     const result = frequencyTable([1, 2, 3]);
+ *     assertDeepEqual(result, {1: 1, 2: 1, 3: 1});
+ * });
+ */
 function test(name, inputData, fn) {
     const startTime = Date.now();
     try {
@@ -80,23 +149,55 @@ function test(name, inputData, fn) {
     }
 }
 
+/**
+ * Asserts that two values are equal using JSON stringification.
+ * 
+ * @param {*} actual - The actual value
+ * @param {*} expected - The expected value
+ * @param {string} [message] - Optional custom error message
+ * @throws {Error} Throws an error if values don't match
+ */
 function assertEqual(actual, expected, message) {
     if (JSON.stringify(actual) !== JSON.stringify(expected)) {
         throw new Error(message || `Expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
     }
 }
 
+/**
+ * Asserts that two values are deeply equal using JSON stringification.
+ * Useful for comparing objects and arrays.
+ * 
+ * @param {*} actual - The actual value
+ * @param {*} expected - The expected value
+ * @param {string} [message] - Optional custom error message
+ * @throws {Error} Throws an error if values don't match
+ * 
+ * @example
+ * assertDeepEqual({a: 1, b: 2}, {a: 1, b: 2}); // Passes
+ * assertDeepEqual([1, 2], [1, 2]); // Passes
+ */
 function assertDeepEqual(actual, expected, message) {
     if (JSON.stringify(actual) !== JSON.stringify(expected)) {
         throw new Error(message || `Expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
     }
 }
 
+// ============================================================================
 // Test Cases
+// ============================================================================
 
 console.log('Running frequencyTable Tests\n');
 
+/**
+ * Counter for passed tests
+ * @type {number}
+ */
 let passed = 0;
+
+/**
+ * Counter for total tests run
+ * @type {number}
+ */
 let total = 0;
 
 // TC-001: Simple array with unique items
@@ -276,7 +377,22 @@ test('TC-015: Input validation (object)', {a: 1, b: 2}, () => {
     }
 });
 
-// Function to display test results in a table
+/**
+ * Displays test results in a formatted ASCII table.
+ * Shows test case name, input data, status, duration, and error messages.
+ * 
+ * @param {Array<Object>} results - Array of test result objects
+ * @param {string} results[].testCase - Name of the test case
+ * @param {*} results[].inputData - Input data used for the test
+ * @param {string} results[].status - 'PASS' or 'FAIL'
+ * @param {number} results[].duration - Execution time in milliseconds
+ * @param {string|null} results[].error - Error message if test failed, null otherwise
+ * 
+ * @example
+ * displayTestResultsTable([
+ *     {testCase: 'TC-001', inputData: [1, 2, 3], status: 'PASS', duration: 0, error: null}
+ * ]);
+ */
 function displayTestResultsTable(results) {
     console.log('\n' + '='.repeat(130));
     console.log('TEST RESULTS TABLE');
