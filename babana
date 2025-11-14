@@ -1,11 +1,13 @@
 function frequencyTable(banana) {
+    // Input validation
+    if (!Array.isArray(banana)) {
+        throw new TypeError('Input must be an array');
+    }
+    
+    // Optimized counting with nullish coalescing operator
     const freq = {};
     for (const item of banana) {
-        if (freq[item] === undefined) {
-            freq[item] = 1;
-        } else {
-            freq[item]++;
-        }
+        freq[item] = (freq[item] ?? 0) + 1;
     }
     return freq;
 }

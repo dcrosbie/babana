@@ -2,13 +2,15 @@
 // Run with: node babana.test.js
 
 function frequencyTable(banana) {
+    // Input validation
+    if (!Array.isArray(banana)) {
+        throw new TypeError('Input must be an array');
+    }
+    
+    // Optimized counting with nullish coalescing operator
     const freq = {};
     for (const item of banana) {
-        if (freq[item] === undefined) {
-            freq[item] = 1;
-        } else {
-            freq[item]++;
-        }
+        freq[item] = (freq[item] ?? 0) + 1;
     }
     return freq;
 }
@@ -215,6 +217,63 @@ test('TC-012: Large array', input012, () => {
     }
     assertDeepEqual(result, expected);
     passed++;
+});
+
+// TC-013: Input validation - non-array input
+test('TC-013: Input validation (non-array)', 'not-an-array', () => {
+    total++;
+    let errorThrown = false;
+    try {
+        frequencyTable('not-an-array');
+    } catch (error) {
+        errorThrown = true;
+        if (error instanceof TypeError && error.message === 'Input must be an array') {
+            passed++;
+        } else {
+            throw new Error(`Expected TypeError with message 'Input must be an array', got ${error.constructor.name}: ${error.message}`);
+        }
+    }
+    if (!errorThrown) {
+        throw new Error('Expected TypeError to be thrown for non-array input');
+    }
+});
+
+// TC-014: Input validation - null input
+test('TC-014: Input validation (null)', null, () => {
+    total++;
+    let errorThrown = false;
+    try {
+        frequencyTable(null);
+    } catch (error) {
+        errorThrown = true;
+        if (error instanceof TypeError && error.message === 'Input must be an array') {
+            passed++;
+        } else {
+            throw new Error(`Expected TypeError with message 'Input must be an array', got ${error.constructor.name}: ${error.message}`);
+        }
+    }
+    if (!errorThrown) {
+        throw new Error('Expected TypeError to be thrown for null input');
+    }
+});
+
+// TC-015: Input validation - object input
+test('TC-015: Input validation (object)', {a: 1, b: 2}, () => {
+    total++;
+    let errorThrown = false;
+    try {
+        frequencyTable({a: 1, b: 2});
+    } catch (error) {
+        errorThrown = true;
+        if (error instanceof TypeError && error.message === 'Input must be an array') {
+            passed++;
+        } else {
+            throw new Error(`Expected TypeError with message 'Input must be an array', got ${error.constructor.name}: ${error.message}`);
+        }
+    }
+    if (!errorThrown) {
+        throw new Error('Expected TypeError to be thrown for object input');
+    }
 });
 
 // Function to display test results in a table
