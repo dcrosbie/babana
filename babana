@@ -1,0 +1,11 @@
+function frequencyTable(banana) {
+    const freq = {};
+    for (const item of banana) {
+        if (freq[item] === undefined) {
+            freq[item] = 1;
+        } else {
+            freq[item]++;
+        }
+    }
+    return freq;
+}
